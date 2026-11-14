@@ -1,4 +1,3 @@
-// Classe mãe de Produto e ItemCompra.
 export abstract class ItemBase {
   constructor(
     public readonly id: string,
