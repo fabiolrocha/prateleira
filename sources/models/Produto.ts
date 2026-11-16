@@ -10,6 +10,7 @@ export type ProdutoDados = {
   codigoBarras: string;
   marca?: string;
   fotoUrl?: string;
+  fotoUri?: string;
   nutriScore?: NutriScore;
   validade: string;
   quantidade: number;
@@ -25,6 +26,7 @@ export class Produto extends ItemBase {
   codigoBarras: string;
   marca?: string;
   fotoUrl?: string;
+  fotoUri?: string;
   nutriScore?: NutriScore;
   validade: string;
   quantidade: number;
@@ -38,6 +40,7 @@ export class Produto extends ItemBase {
     this.codigoBarras = dados.codigoBarras;
     this.marca = dados.marca;
     this.fotoUrl = dados.fotoUrl;
+    this.fotoUri = dados.fotoUri;
     this.nutriScore = dados.nutriScore;
     this.validade = dados.validade;
     this.quantidade = dados.quantidade;
@@ -74,6 +77,7 @@ export class Produto extends ItemBase {
       nome: this.nome,
       marca: this.marca,
       fotoUrl: this.fotoUrl,
+      fotoUri: this.fotoUri,
       nutriScore: this.nutriScore,
       validade: this.validade,
       quantidade: this.quantidade,
