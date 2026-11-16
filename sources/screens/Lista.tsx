@@ -63,7 +63,13 @@ export function Lista() {
           />
         </View>
         <View style={styles.botao}>
-          <Botao titulo="" icone="plus" onPress={adicionar} desabilitado={!nome.trim()} />
+          <Botao
+            titulo=""
+            icone="plus"
+            rotuloAcessibilidade="Adicionar item"
+            onPress={adicionar}
+            desabilitado={!nome.trim()}
+          />
         </View>
       </View>
 
