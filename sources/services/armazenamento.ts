@@ -1,10 +1,11 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+﻿import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const CHAVES = {
   usuario: '@prateleira/usuario',
   produtos: '@prateleira/produtos',
   lista: '@prateleira/lista',
   ajustes: '@prateleira/ajustes',
+  tour: '@prateleira/tour',
 } as const;
 
 export async function salvar<T>(chave: string, valor: T): Promise<void> {
