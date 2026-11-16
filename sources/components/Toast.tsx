@@ -1,6 +1,6 @@
 import { Animated, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { bordas, cores, espacos, fontes, raios, tamanhos, toque } from '../tema';
+import { bordas, cores, espacos, fontes, raios, tamanhos } from '../tema';
 
 export type TipoToast = 'sucesso' | 'info' | 'erro';
 
@@ -16,8 +16,7 @@ const COR_FAIXA: Record<TipoToast, string> = {
   erro: cores.perigo,
 };
 
-const DESLOCAMENTO = espacos.md;
-const ALTURA_TAB_BAR = toque.minimo + espacos.xxl + espacos.sm;
+const DESLOCAMENTO = -espacos.md;
 
 export function Toast({ mensagem, tipo, progresso }: Props) {
   const insets = useSafeAreaInsets();
@@ -25,7 +24,7 @@ export function Toast({ mensagem, tipo, progresso }: Props) {
   return (
     <View
       pointerEvents="none"
-      style={[styles.area, { bottom: insets.bottom + ALTURA_TAB_BAR + espacos.md }]}
+      style={[styles.area, { top: insets.top + espacos.md }]}
     >
       <Animated.View
         accessibilityRole="alert"
