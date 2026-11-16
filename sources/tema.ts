@@ -1,42 +1,36 @@
 export const cores = {
-  fundo: '#F1F3EE',
-  superficie: '#FFFFFF',
-  texto: '#17202B',
-  textoSecundario: '#69727A',
-  textoInverso: '#FFFFFF',
-  borda: '#DCE1DA',
-
-  positivo: '#1F7A4D',
-  positivoClaro: '#E2EFE6',
-  atencao: '#F2B705',
-  perigo: '#D63F2A',
-  perigoClaro: '#FBE3DE',
+  fundo: '#FFFFFF',
+  painel: '#F6F3EA',
+  painelPressionado: '#ECE7D8',
+  linha: '#D9D2BE',
+  texto: '#4A4437',
+  destaque: '#0A0A0A',
+  apagado: '#8A8372',
+  rotulo: '#3E6384',
+  atencao: '#8F6A1E',
+  positivo: '#2F6B3A',
+  perigo: '#A63A2B',
+  sobreDestaque: '#FFFFFF',
 } as const;
 
 export const fontes = {
-  regular: 'SchibstedGrotesk_400Regular',
-  medio: 'SchibstedGrotesk_500Medium',
-  seminegrito: 'SchibstedGrotesk_600SemiBold',
-  extranegrito: 'SchibstedGrotesk_800ExtraBold',
-  carimbo: 'DotGothic16_400Regular',
+  regular: 'JetBrainsMono_400Regular',
+  medio: 'JetBrainsMono_500Medium',
+  extranegrito: 'JetBrainsMono_800ExtraBold',
 } as const;
 
 export const tamanhos = {
-  legenda: 12,
-  pequeno: 13,
-  corpo: 14,
-  medio: 16,
-  grande: 18,
-  titulo: 30,
-  destaque: 46,
+  micro: 9,
+  legenda: 11,
+  corpo: 13,
+  titulo: 20,
+  display: 28,
 } as const;
 
-export const raios = {
-  tag: 6,
-  botao: 14,
-  card: 18,
-  painel: 24,
-  pilula: 999,
+export const espacamentoLetras = {
+  normal: 0.5,
+  largo: 1.2,
+  maisLargo: 2,
 } as const;
 
 export const espacos = {
@@ -44,6 +38,19 @@ export const espacos = {
   sm: 8,
   md: 12,
   lg: 16,
-  xl: 20,
-  xxl: 24,
+  xl: 24,
+  xxl: 36,
+} as const;
+
+export const bordas = {
+  largura: 1,
+  acento: 3,
+} as const;
+
+export const raios = {
+  nenhum: 0,
+} as const;
+
+export const toque = {
+  minimo: 44,
 } as const;
