@@ -7,9 +7,11 @@ import { Botao } from '../components/Botao';
 import { LinhaAjuste } from '../components/LinhaAjuste';
 import { useAjustes } from '../contexts/AjustesContext';
 import { useDespensa } from '../contexts/DespensaContext';
+import { useToast } from '../contexts/ToastContext';
 import { useUsuario } from '../contexts/UsuarioContext';
 import { cancelarTodos, pedirPermissao, testarNotificacao } from '../services/notificacoes';
 import { bordas, cores, espacamentoLetras, espacos, fontes, raios, tamanhos, toque } from '../tema';
+import { fundoPressionado } from '../utils/estiloPressionado';
 
 const AVATAR = 56;
 
@@ -32,6 +34,7 @@ export function Ajustes() {
   const { usuario } = useUsuario();
   const { ajustes, atualizarAjustes } = useAjustes();
   const { reagendarTodos } = useDespensa();
+  const { mostrar } = useToast();
   const [diasExibidos, setDiasExibidos] = useState<number>(ajustes.diasAvisoPadrao);
   const [reagendamentos, setReagendamentos] = useState<number>(0);
   const [seletorAberto, setSeletorAberto] = useState<boolean>(false);
@@ -56,6 +59,7 @@ export function Ajustes() {
       await cancelarTodos();
       setReagendamentos((anterior) => anterior + 1);
     }
+    mostrar(ligado ? 'Avisos ativados' : 'Avisos desativados', 'info');
   }
 
   async function salvarDias(valor: number): Promise<void> {
@@ -94,7 +98,7 @@ export function Ajustes() {
       return;
     }
     await testarNotificacao();
-    Alert.alert('Teste agendado', 'A notificação de teste chega em alguns segundos.');
+    mostrar('Notificação de teste enviada', 'info');
   }
 
   return (
@@ -144,7 +148,7 @@ export function Ajustes() {
           <Pressable
             onPress={abrirSeletor}
             accessibilityRole="button"
-            style={styles.horario}
+            style={({ pressed }) => [styles.horario, fundoPressionado(pressed)]}
           >
             <Text style={styles.textoHorario}>Horário do aviso</Text>
             <Text style={styles.valorHorario}>{horario}</Text>

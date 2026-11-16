@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { Produto } from '../models/Produto';
 import { bordas, cores, espacamentoLetras, espacos, fontes, raios, tamanhos, toque } from '../tema';
+import { fundoPressionado } from '../utils/estiloPressionado';
 import { ThumbProduto } from './ThumbProduto';
 import { TagValidade } from './TagValidade';
 import type { SituacaoValidade } from './TagValidade';
@@ -37,7 +38,7 @@ export function CardProduto({ produto, onPress }: Props) {
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
-      style={({ pressed }) => [styles.card, pressed && styles.apertado]}
+      style={({ pressed }) => [styles.card, fundoPressionado(pressed)]}
     >
       <ThumbProduto uri={produto.fotoUri ?? produto.fotoUrl} tamanho={TAMANHO_THUMB} />
       <View style={styles.dados}>
@@ -66,7 +67,6 @@ const styles = StyleSheet.create({
     borderColor: cores.linha,
     borderRadius: raios.nenhum,
   },
-  apertado: { backgroundColor: cores.painelPressionado },
   dados: { flex: 1, gap: espacos.xs },
   nome: {
     fontFamily: fontes.medio,

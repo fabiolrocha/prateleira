@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, Text } from 'react-native';
 import { bordas, cores, espacamentoLetras, espacos, fontes, raios, tamanhos, toque } from '../tema';
+import { fundoPressionado, opacidadePressionado } from '../utils/estiloPressionado';
 
 type Props = {
   titulo: string;
@@ -16,7 +17,7 @@ export function Filtro({ titulo, ativo, onPress }: Props) {
       style={({ pressed }) => [
         styles.filtro,
         ativo ? styles.ativo : styles.inativo,
-        pressed && !ativo && styles.apertado,
+        ativo ? opacidadePressionado(pressed) : fundoPressionado(pressed),
       ]}
     >
       <Text style={[styles.titulo, { color: ativo ? cores.sobreDestaque : cores.texto }]}>{titulo}</Text>
@@ -35,7 +36,6 @@ const styles = StyleSheet.create({
   },
   ativo: { backgroundColor: cores.destaque, borderColor: cores.destaque },
   inativo: { backgroundColor: cores.painel, borderColor: cores.linha },
-  apertado: { backgroundColor: cores.painelPressionado },
   titulo: {
     fontFamily: fontes.medio,
     fontSize: tamanhos.legenda,

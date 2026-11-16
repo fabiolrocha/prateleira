@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { bordas, cores, raios } from '../tema';
+import { fundoPressionado, opacidadePressionado } from '../utils/estiloPressionado';
 
 type Props = {
   marcado: boolean;
@@ -18,9 +19,10 @@ export function Checkbox({ marcado, onChange, desabilitado = false }: Props) {
       accessibilityRole="checkbox"
       accessibilityState={{ checked: marcado, disabled: desabilitado }}
       hitSlop={10}
-      style={[
+      style={({ pressed }) => [
         styles.caixa,
         { backgroundColor: marcado ? cores.positivo : cores.fundo, borderColor: marcado ? cores.positivo : cores.linha },
+        marcado ? opacidadePressionado(pressed, desabilitado) : fundoPressionado(pressed, desabilitado),
         desabilitado && styles.desabilitado,
       ]}
     >

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -12,9 +12,11 @@ import { ThumbProduto } from '../components/ThumbProduto';
 import { useAjustes } from '../contexts/AjustesContext';
 import { useDespensa } from '../contexts/DespensaContext';
 import { useListaCompras } from '../contexts/ListaComprasContext';
+import { useToast } from '../contexts/ToastContext';
 import type { StatusValidade } from '../models/Produto';
 import type { DespensaStackParams } from '../routes/tipos';
 import { bordas, cores, espacamentoLetras, espacos, fontes, raios, tamanhos, toque } from '../tema';
+import { fundoPressionado } from '../utils/estiloPressionado';
 import { formatarData } from '../utils/datas';
 
 type Props = NativeStackScreenProps<DespensaStackParams, 'DetalheProduto'>;
@@ -37,6 +39,8 @@ export function DetalheProduto({ navigation, route }: Props) {
   const { buscarPorId, atualizar, consumir, descartar, carregando } = useDespensa();
   const { adicionarAutomatico } = useListaCompras();
   const { ajustes } = useAjustes();
+  const { mostrar } = useToast();
+  const [ocupado, setOcupado] = useState(false);
   const produto = buscarPorId(produtoId);
 
   useEffect(() => {
@@ -47,10 +51,36 @@ export function DetalheProduto({ navigation, route }: Props) {
 
   const horario = `${doisDigitos(ajustes.horaAviso)}:${doisDigitos(ajustes.minutoAviso)}`;
 
+  async function aoConsumir() {
+    if (!produto) return;
+    const { nome, reposicao } = produto;
+    setOcupado(true);
+    await consumir(produtoId);
+    setOcupado(false);
+    mostrar(reposicao ? `${nome} consumido. Adicionado à lista de compras` : `${nome} consumido`, 'sucesso');
+  }
+
+  async function aoDescartar() {
+    if (!produto) return;
+    const { nome } = produto;
+    setOcupado(true);
+    await descartar(produtoId);
+    setOcupado(false);
+    mostrar(`${nome} descartado`, 'info');
+  }
+
+  async function aoPorNaLista() {
+    if (!produto) return;
+    setOcupado(true);
+    await adicionarAutomatico(produto);
+    setOcupado(false);
+    mostrar(`${produto.nome} adicionado à lista de compras`, 'sucesso');
+  }
+
   function confirmarDescarte() {
     Alert.alert('Joguei fora', `Remover ${produto?.nome} da despensa?`, [
       { text: 'Cancelar', style: 'cancel' },
-      { text: 'Joguei fora', style: 'destructive', onPress: () => descartar(produtoId) },
+      { text: 'Joguei fora', style: 'destructive', onPress: aoDescartar },
     ]);
   }
 
@@ -64,7 +94,7 @@ export function DetalheProduto({ navigation, route }: Props) {
           onPress={() => navigation.goBack()}
           accessibilityRole="button"
           accessibilityLabel="Voltar"
-          style={styles.voltar}
+          style={({ pressed }) => [styles.voltar, fundoPressionado(pressed)]}
         >
           <Feather name="arrow-left" size={24} color={cores.destaque} />
         </Pressable>
@@ -108,13 +138,14 @@ export function DetalheProduto({ navigation, route }: Props) {
 
         <View style={styles.secao}>
           <Text style={styles.rotulo}>[ AÇÕES ]</Text>
-          <Botao titulo="Consumi" estilo="positivo" icone="check" onPress={() => consumir(produtoId)} />
-          <Botao titulo="Joguei fora" estilo="perigo" icone="trash-2" onPress={confirmarDescarte} />
+          <Botao titulo="Consumi" estilo="positivo" icone="check" onPress={aoConsumir} desabilitado={ocupado} />
+          <Botao titulo="Joguei fora" estilo="perigo" icone="trash-2" onPress={confirmarDescarte} desabilitado={ocupado} />
           <Botao
             titulo="Pôr na lista"
             estilo="contorno"
             icone="shopping-cart"
-            onPress={() => adicionarAutomatico(produto)}
+            onPress={aoPorNaLista}
+            desabilitado={ocupado}
           />
         </View>
       </ScrollView>

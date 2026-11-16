@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { bordas, cores, espacos, fontes, raios, tamanhos, toque } from '../tema';
+import { fundoPressionado } from '../utils/estiloPressionado';
 
 type Props = {
   valor: number;
@@ -29,7 +30,7 @@ export function CampoQuantidade({ valor, onChange, minimo = 1 }: Props) {
         disabled={valor <= minimo}
         accessibilityRole="button"
         accessibilityLabel="Diminuir quantidade"
-        style={({ pressed }) => [styles.botao, pressed && styles.apertado, valor <= minimo && styles.desabilitado]}
+        style={({ pressed }) => [styles.botao, fundoPressionado(pressed, valor <= minimo), valor <= minimo && styles.desabilitado]}
       >
         <Text style={styles.simbolo}>−</Text>
       </Pressable>
@@ -46,7 +47,7 @@ export function CampoQuantidade({ valor, onChange, minimo = 1 }: Props) {
         onPress={() => mudar(valor + 1)}
         accessibilityRole="button"
         accessibilityLabel="Aumentar quantidade"
-        style={({ pressed }) => [styles.botao, pressed && styles.apertado]}
+        style={({ pressed }) => [styles.botao, fundoPressionado(pressed)]}
       >
         <Text style={styles.simbolo}>+</Text>
       </Pressable>
@@ -66,7 +67,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  apertado: { backgroundColor: cores.painelPressionado },
   desabilitado: { opacity: 0.4 },
   simbolo: {
     fontFamily: fontes.medio,

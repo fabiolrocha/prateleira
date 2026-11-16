@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Botao } from '../components/Botao';
 import { Campo } from '../components/Campo';
 import { Checkbox } from '../components/Checkbox';
 import { EstadoVazio } from '../components/EstadoVazio';
 import { useListaCompras } from '../contexts/ListaComprasContext';
+import { useToast } from '../contexts/ToastContext';
 import type { ItemCompra } from '../models/ItemCompra';
 import { bordas, cores, espacamentoLetras, espacos, fontes, tamanhos } from '../tema';
+import { fundoPressionado } from '../utils/estiloPressionado';
 
 type Grupo = {
   chave: string;
@@ -16,6 +18,7 @@ type Grupo = {
 
 export function Lista() {
   const { itens, adicionarManual, alternarCarrinho } = useListaCompras();
+  const { mostrar } = useToast();
   const [nome, setNome] = useState('');
 
   const noCarrinho = itens.filter((item) => item.noCarrinho);
@@ -35,8 +38,10 @@ export function Lista() {
 
   async function adicionar() {
     if (!nome.trim()) return;
-    await adicionarManual(nome);
+    const nomeFinal = nome.trim();
     setNome('');
+    await adicionarManual(nomeFinal);
+    mostrar(`${nomeFinal} adicionado à lista`, 'sucesso');
   }
 
   return (
@@ -62,7 +67,13 @@ export function Lista() {
           />
         </View>
         <View style={styles.botao}>
-          <Botao titulo="" icone="plus" onPress={adicionar} desabilitado={!nome.trim()} />
+          <Botao
+            titulo=""
+            icone="plus"
+            rotuloAcessibilidade="Adicionar item"
+            onPress={adicionar}
+            desabilitado={!nome.trim()}
+          />
         </View>
       </View>
 
@@ -73,7 +84,13 @@ export function Lista() {
           <View key={grupo.chave} style={styles.grupo}>
             <Text style={styles.rotulo}>{grupo.rotulo}</Text>
             {grupo.itens.map((item) => (
-              <View key={item.id} style={styles.linha}>
+              <Pressable
+                key={item.id}
+                onPress={() => alternarCarrinho(item.id)}
+                accessibilityRole="button"
+                accessibilityLabel={item.noCarrinho ? `Tirar ${item.nome} do carrinho` : `Pôr ${item.nome} no carrinho`}
+                style={({ pressed }) => [styles.linha, fundoPressionado(pressed)]}
+              >
                 <Checkbox marcado={item.noCarrinho} onChange={() => alternarCarrinho(item.id)} />
                 <View style={styles.textos}>
                   <Text style={[styles.nome, item.noCarrinho && styles.riscado]}>{item.nome}</Text>
@@ -83,7 +100,7 @@ export function Lista() {
                     </Text>
                   )}
                 </View>
-              </View>
+              </Pressable>
             ))}
           </View>
         ),

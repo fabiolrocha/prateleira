@@ -13,6 +13,7 @@ import { AjustesProvider, useAjustes } from './sources/contexts/AjustesContext';
 import { DespensaProvider } from './sources/contexts/DespensaContext';
 import type { IntegracoesDespensa } from './sources/contexts/DespensaContext';
 import { ListaComprasProvider, useListaCompras } from './sources/contexts/ListaComprasContext';
+import { ToastProvider } from './sources/contexts/ToastContext';
 import { UsuarioProvider } from './sources/contexts/UsuarioContext';
 import { useAbrirPelaNotificacao } from './sources/hooks/useAbrirPelaNotificacao';
 import { navigationRef } from './sources/routes/navigationRef';
@@ -72,29 +73,31 @@ export default function App() {
           <ListaComprasProvider>
             <DespensaComIntegracoes>
               <AbrirPelaNotificacao />
-              <NavigationContainer
-                ref={navigationRef}
-                theme={{
-                  dark: false,
-                  colors: {
-                    primary: cores.destaque,
-                    background: cores.fundo,
-                    card: cores.painel,
-                    text: cores.destaque,
-                    border: cores.linha,
-                    notification: cores.perigo,
-                  },
-                  fonts: {
-                    regular: { fontFamily: 'JetBrainsMono_400Regular', fontWeight: '400' },
-                    medium: { fontFamily: 'JetBrainsMono_500Medium', fontWeight: '500' },
-                    bold: { fontFamily: 'JetBrainsMono_800ExtraBold', fontWeight: '800' },
-                    heavy: { fontFamily: 'JetBrainsMono_800ExtraBold', fontWeight: '800' },
-                  },
-                }}
-              >
-                <RootStack />
-                <StatusBar style="dark" />
-              </NavigationContainer>
+              <ToastProvider>
+                <NavigationContainer
+                  ref={navigationRef}
+                  theme={{
+                    dark: false,
+                    colors: {
+                      primary: cores.destaque,
+                      background: cores.fundo,
+                      card: cores.painel,
+                      text: cores.destaque,
+                      border: cores.linha,
+                      notification: cores.perigo,
+                    },
+                    fonts: {
+                      regular: { fontFamily: 'JetBrainsMono_400Regular', fontWeight: '400' },
+                      medium: { fontFamily: 'JetBrainsMono_500Medium', fontWeight: '500' },
+                      bold: { fontFamily: 'JetBrainsMono_800ExtraBold', fontWeight: '800' },
+                      heavy: { fontFamily: 'JetBrainsMono_800ExtraBold', fontWeight: '800' },
+                    },
+                  }}
+                >
+                  <RootStack />
+                  <StatusBar style="dark" />
+                </NavigationContainer>
+              </ToastProvider>
             </DespensaComIntegracoes>
           </ListaComprasProvider>
         </AjustesProvider>

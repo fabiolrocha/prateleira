@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import { bordas, cores, raios } from '../tema';
+import { opacidadePressionado } from '../utils/estiloPressionado';
 
 type Props = {
   valor: boolean;
@@ -20,9 +21,10 @@ export function Switch({ valor, onChange, desabilitado = false }: Props) {
       accessibilityRole="switch"
       accessibilityState={{ checked: valor, disabled: desabilitado }}
       hitSlop={10}
-      style={[
+      style={({ pressed }) => [
         styles.trilho,
         { backgroundColor: valor ? cores.positivo : cores.painel, borderColor: valor ? cores.positivo : cores.linha },
+        opacidadePressionado(pressed, desabilitado),
         desabilitado && styles.desabilitado,
       ]}
     >

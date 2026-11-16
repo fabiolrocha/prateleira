@@ -6,6 +6,7 @@ import { Botao } from '../components/Botao';
 import type { RootStackParams } from '../routes/tipos';
 import { CHAVES, ler, salvar } from '../services/armazenamento';
 import { bordas, cores, espacamentoLetras, espacos, fontes, raios, tamanhos, toque } from '../tema';
+import { fundoPressionado } from '../utils/estiloPressionado';
 
 type Props = NativeStackScreenProps<RootStackParams, 'Tour'>;
 
@@ -76,7 +77,7 @@ export function Tour({ navigation }: Props) {
           onPress={concluir}
           accessibilityRole="button"
           accessibilityLabel="Pular tour"
-          style={styles.pular}
+          style={({ pressed }) => [styles.pular, fundoPressionado(pressed)]}
         >
           <Text style={styles.textoPular}>Pular</Text>
         </Pressable>

@@ -9,6 +9,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -19,9 +20,11 @@ import { LinhaAjuste } from '../components/LinhaAjuste';
 import { ThumbProduto } from '../components/ThumbProduto';
 import { useAjustes } from '../contexts/AjustesContext';
 import { useDespensa } from '../contexts/DespensaContext';
+import { useToast } from '../contexts/ToastContext';
 import type { RootStackParams } from '../routes/tipos';
 import { buscarProdutoPorCodigo } from '../services/openFoodFacts';
 import { bordas, cores, espacamentoLetras, espacos, fontes, raios, tamanhos, toque } from '../tema';
+import { fundoPressionado } from '../utils/estiloPressionado';
 import type { ProdutoApi } from '../tipos';
 import { inicioDoDia } from '../utils/datas';
 
@@ -47,6 +50,7 @@ export function ConfirmarProduto({ navigation, route }: Props) {
   const { codigoBarras } = route.params;
   const { adicionar } = useDespensa();
   const { ajustes } = useAjustes();
+  const { mostrar } = useToast();
 
   const semCodigo = !codigoBarras;
   const [carregando, setCarregando] = useState(!semCodigo);
@@ -129,6 +133,7 @@ export function ConfirmarProduto({ navigation, route }: Props) {
         diasAviso,
         reposicao,
       });
+      mostrar(`${nomeFinal} adicionado à despensa`, 'sucesso');
       navigation.popToTop();
     } catch {
       setSalvando(false);
@@ -141,6 +146,7 @@ export function ConfirmarProduto({ navigation, route }: Props) {
       <View style={styles.centro}>
         <ActivityIndicator size="large" color={cores.destaque} />
         <Text style={styles.texto}>Consultando o Open Food Facts...</Text>
+        <Botao titulo="Cancelar" onPress={() => navigation.popToTop()} estilo="contorno" />
       </View>
     );
   }
@@ -150,13 +156,25 @@ export function ConfirmarProduto({ navigation, route }: Props) {
       <View style={styles.centro}>
         <Text style={styles.texto}>{erro}</Text>
         <Botao titulo="Tentar novamente" onPress={buscar} estilo="contorno" />
+        <Botao titulo="Cancelar" onPress={() => navigation.popToTop()} estilo="contorno" />
       </View>
     );
   }
 
   return (
     <ScrollView style={styles.tela} contentContainerStyle={styles.conteudo} keyboardShouldPersistTaps="handled">
-      <Text style={styles.titulo}>Confirmar produto</Text>
+      <View style={styles.cabecalho}>
+        <Text style={styles.titulo}>Confirmar produto</Text>
+        <Pressable
+          onPress={() => navigation.popToTop()}
+          disabled={salvando}
+          accessibilityRole="button"
+          accessibilityLabel="Fechar"
+          style={({ pressed }) => [styles.botaoFechar, fundoPressionado(pressed, salvando)]}
+        >
+          <Feather name="x" size={20} color={cores.destaque} />
+        </Pressable>
+      </View>
 
       {!semCodigo && (
         <View style={styles.faixa}>
@@ -196,7 +214,7 @@ export function ConfirmarProduto({ navigation, route }: Props) {
             onPress={abrirSeletorAndroid}
             accessibilityRole="button"
             accessibilityLabel="Escolher data de validade"
-            style={({ pressed }) => [styles.dataBotao, pressed && styles.dataApertada]}
+            style={({ pressed }) => [styles.dataBotao, fundoPressionado(pressed)]}
           >
             <Text style={styles.dataTexto}>{formatarDataCompleta(validade)}</Text>
           </Pressable>
@@ -254,7 +272,24 @@ const styles = StyleSheet.create({
     padding: espacos.xl,
     gap: espacos.lg,
   },
+  cabecalho: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: espacos.md,
+  },
+  botaoFechar: {
+    width: toque.minimo,
+    height: toque.minimo,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: cores.painel,
+    borderWidth: bordas.largura,
+    borderColor: cores.linha,
+    borderRadius: raios.nenhum,
+  },
   titulo: {
+    flexShrink: 1,
     color: cores.destaque,
     fontFamily: fontes.extranegrito,
     fontSize: tamanhos.display,
@@ -304,7 +339,6 @@ const styles = StyleSheet.create({
     borderColor: cores.linha,
     borderRadius: raios.nenhum,
   },
-  dataApertada: { backgroundColor: cores.painelPressionado },
   dataTexto: {
     color: cores.destaque,
     fontFamily: fontes.medio,

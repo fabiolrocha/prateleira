@@ -4,6 +4,7 @@ import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import { bordas, cores, espacamentoLetras, espacos, fontes, raios, tamanhos, toque } from '../tema';
+import { fundoPressionado } from '../utils/estiloPressionado';
 
 type NomeIcone = ComponentProps<typeof Feather>['name'];
 
@@ -50,7 +51,7 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
             accessibilityRole="tab"
             accessibilityLabel={rotulo}
             accessibilityState={{ selected: ativa }}
-            style={styles.aba}
+            style={({ pressed }) => [styles.aba, fundoPressionado(pressed)]}
           >
             <View style={[styles.quadrado, ativa && styles.quadradoAtivo]}>
               <Feather
