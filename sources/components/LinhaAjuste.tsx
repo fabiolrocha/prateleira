@@ -7,7 +7,7 @@ type Props = {
   texto: string;
   valor?: string;
   interruptor?: { ligado: boolean; onChange: (ligado: boolean) => void };
-  slider?: { valor: number; minimo: number; maximo: number; passo?: number; onChange: (valor: number) => void };
+  slider?: { valor: number; minimo: number; maximo: number; passo?: number; onChange: (valor: number) => void; aoSoltar?: (valor: number) => void };
   ultima?: boolean;
 };
 
@@ -26,6 +26,7 @@ export function LinhaAjuste({ texto, valor, interruptor, slider, ultima = false 
           maximo={slider.maximo}
           passo={slider.passo}
           onChange={slider.onChange}
+          aoSoltar={slider.aoSoltar}
         />
       )}
     </View>
