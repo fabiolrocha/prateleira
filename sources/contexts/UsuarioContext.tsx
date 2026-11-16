@@ -11,13 +11,8 @@ export type UsuarioContextoValor = {
 
 const UsuarioContext = createContext<UsuarioContextoValor | null>(null);
 
-const USUARIO_EXEMPLO: Usuario = {
-  nome: 'Gustavo',
-  desde: '2026-11-01T00:00:00.000Z',
-};
-
 export function UsuarioProvider({ children }: { children: ReactNode }): ReactElement {
-  const [usuario, setUsuario] = useState<Usuario | null>(USUARIO_EXEMPLO);
+  const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [carregando, setCarregando] = useState<boolean>(true);
 
   useEffect(() => {
@@ -37,7 +32,7 @@ export function UsuarioProvider({ children }: { children: ReactNode }): ReactEle
   }, []);
 
   const definirNome = useCallback(async (nome: string): Promise<void> => {
-    const novo: Usuario = { nome, desde: new Date().toISOString() };
+    const novo: Usuario = { nome: nome.trim(), desde: new Date().toISOString() };
     setUsuario(novo);
     await salvar(CHAVES.usuario, novo);
   }, []);
