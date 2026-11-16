@@ -39,8 +39,8 @@ export function Lista() {
   async function adicionar() {
     if (!nome.trim()) return;
     const nomeFinal = nome.trim();
-    await adicionarManual(nome);
     setNome('');
+    await adicionarManual(nomeFinal);
     mostrar(`${nomeFinal} adicionado à lista`, 'sucesso');
   }
 

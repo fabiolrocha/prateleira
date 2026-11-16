@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -40,6 +40,7 @@ export function DetalheProduto({ navigation, route }: Props) {
   const { adicionarAutomatico } = useListaCompras();
   const { ajustes } = useAjustes();
   const { mostrar } = useToast();
+  const [ocupado, setOcupado] = useState(false);
   const produto = buscarPorId(produtoId);
 
   useEffect(() => {
@@ -53,20 +54,26 @@ export function DetalheProduto({ navigation, route }: Props) {
   async function aoConsumir() {
     if (!produto) return;
     const { nome, reposicao } = produto;
+    setOcupado(true);
     await consumir(produtoId);
+    setOcupado(false);
     mostrar(reposicao ? `${nome} consumido. Adicionado à lista de compras` : `${nome} consumido`, 'sucesso');
   }
 
   async function aoDescartar() {
     if (!produto) return;
     const { nome } = produto;
+    setOcupado(true);
     await descartar(produtoId);
+    setOcupado(false);
     mostrar(`${nome} descartado`, 'info');
   }
 
   async function aoPorNaLista() {
     if (!produto) return;
+    setOcupado(true);
     await adicionarAutomatico(produto);
+    setOcupado(false);
     mostrar(`${produto.nome} adicionado à lista de compras`, 'sucesso');
   }
 
@@ -131,13 +138,14 @@ export function DetalheProduto({ navigation, route }: Props) {
 
         <View style={styles.secao}>
           <Text style={styles.rotulo}>[ AÇÕES ]</Text>
-          <Botao titulo="Consumi" estilo="positivo" icone="check" onPress={aoConsumir} />
-          <Botao titulo="Joguei fora" estilo="perigo" icone="trash-2" onPress={confirmarDescarte} />
+          <Botao titulo="Consumi" estilo="positivo" icone="check" onPress={aoConsumir} desabilitado={ocupado} />
+          <Botao titulo="Joguei fora" estilo="perigo" icone="trash-2" onPress={confirmarDescarte} desabilitado={ocupado} />
           <Botao
             titulo="Pôr na lista"
             estilo="contorno"
             icone="shopping-cart"
             onPress={aoPorNaLista}
+            desabilitado={ocupado}
           />
         </View>
       </ScrollView>
