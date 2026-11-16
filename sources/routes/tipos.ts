@@ -17,5 +17,5 @@ export type RootStackParams = {
   Tour: undefined;
   Abas: NavigatorScreenParams<TabParams> | undefined;
   Escanear: undefined;
-  ConfirmarProduto: { codigoBarras: string };
+  ConfirmarProduto: { codigoBarras?: string };
 };

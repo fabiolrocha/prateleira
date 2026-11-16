@@ -48,7 +48,8 @@ export function ConfirmarProduto({ navigation, route }: Props) {
   const { adicionar } = useDespensa();
   const { ajustes } = useAjustes();
 
-  const [carregando, setCarregando] = useState(true);
+  const semCodigo = !codigoBarras;
+  const [carregando, setCarregando] = useState(!semCodigo);
   const [erro, setErro] = useState<string | null>(null);
   const [produtoApi, setProdutoApi] = useState<ProdutoApi | null>(null);
   const [nome, setNome] = useState('');
@@ -62,6 +63,10 @@ export function ConfirmarProduto({ navigation, route }: Props) {
   const [salvando, setSalvando] = useState(false);
 
   const buscar = useCallback(async () => {
+    if (!codigoBarras) {
+      setCarregando(false);
+      return;
+    }
     setCarregando(true);
     setErro(null);
     try {
@@ -114,7 +119,7 @@ export function ConfirmarProduto({ navigation, route }: Props) {
     try {
       await adicionar({
         nome: nomeFinal,
-        codigoBarras,
+        codigoBarras: codigoBarras ?? '',
         marca: produtoApi?.marca,
         fotoUrl: produtoApi?.fotoUrl,
         fotoUri,
@@ -153,17 +158,19 @@ export function ConfirmarProduto({ navigation, route }: Props) {
     <ScrollView style={styles.tela} contentContainerStyle={styles.conteudo} keyboardShouldPersistTaps="handled">
       <Text style={styles.titulo}>Confirmar produto</Text>
 
-      <View style={styles.faixa}>
-        <ThumbProduto uri={fotoUri ?? produtoApi?.fotoUrl} tamanho={TAMANHO_THUMB} />
-        <View style={styles.faixaTexto}>
-          <Text style={styles.rotulo}>
-            {produtoApi ? '[ ENCONTRADO NO OPEN FOOD FACTS ]' : '[ PRODUTO NÃO ENCONTRADO ]'}
-          </Text>
-          {produtoApi && <Text style={styles.nome}>{produtoApi.nome}</Text>}
-          {produtoApi?.marca && <Text style={styles.texto}>{produtoApi.marca}</Text>}
-          <Text style={styles.codigo}>{codigoBarras}</Text>
+      {!semCodigo && (
+        <View style={styles.faixa}>
+          <ThumbProduto uri={fotoUri ?? produtoApi?.fotoUrl} tamanho={TAMANHO_THUMB} />
+          <View style={styles.faixaTexto}>
+            <Text style={styles.rotulo}>
+              {produtoApi ? '[ ENCONTRADO NO OPEN FOOD FACTS ]' : '[ PRODUTO NÃO ENCONTRADO ]'}
+            </Text>
+            {produtoApi && <Text style={styles.nome}>{produtoApi.nome}</Text>}
+            {produtoApi?.marca && <Text style={styles.texto}>{produtoApi.marca}</Text>}
+            <Text style={styles.codigo}>{codigoBarras}</Text>
+          </View>
         </View>
-      </View>
+      )}
 
       {!produtoApi && (
         <View style={styles.secao}>
@@ -231,7 +238,7 @@ export function ConfirmarProduto({ navigation, route }: Props) {
         />
       </View>
 
-      <Botao titulo="Salvar na despensa" estilo="positivo" onPress={salvar} desabilitado={salvando} />
+      <Botao titulo="Salvar na despensa" estilo="positivo" onPress={salvar} desabilitado={salvando || !nome.trim()} />
     </ScrollView>
   );
 }
