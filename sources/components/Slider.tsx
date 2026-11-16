@@ -8,13 +8,15 @@ type Props = {
   minimo: number;
   maximo: number;
   passo?: number;
+  aoSoltar?: (valor: number) => void;
 };
 
-export function Slider({ valor, onChange, minimo, maximo, passo = 1 }: Props) {
+export function Slider({ valor, onChange, minimo, maximo, passo = 1, aoSoltar }: Props) {
   return (
     <RNSlider
       value={valor}
       onValueChange={onChange}
+      onSlidingComplete={aoSoltar}
       minimumValue={minimo}
       maximumValue={maximo}
       step={passo}
