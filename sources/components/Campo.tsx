@@ -5,7 +5,7 @@ import { bordas, cores, espacos, fontes, raios, tamanhos, toque } from '../tema'
 
 type Props = Pick<
   TextInputProps,
-  'value' | 'onChangeText' | 'placeholder' | 'keyboardType' | 'secureTextEntry' | 'autoCapitalize' | 'accessibilityLabel'
+  'value' | 'onChangeText' | 'placeholder' | 'keyboardType' | 'secureTextEntry' | 'autoCapitalize' | 'accessibilityLabel' | 'maxLength'
 >;
 
 export function Campo(props: Props) {
