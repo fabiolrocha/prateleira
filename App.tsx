@@ -4,11 +4,11 @@ import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {
-  JetBrainsMono_400Regular,
-  JetBrainsMono_500Medium,
-  JetBrainsMono_800ExtraBold,
+  IBMPlexMono_400Regular,
+  IBMPlexMono_500Medium,
+  IBMPlexMono_700Bold,
   useFonts,
-} from '@expo-google-fonts/jetbrains-mono';
+} from '@expo-google-fonts/ibm-plex-mono';
 import { AjustesProvider, useAjustes } from './sources/contexts/AjustesContext';
 import { DespensaProvider } from './sources/contexts/DespensaContext';
 import type { IntegracoesDespensa } from './sources/contexts/DespensaContext';
@@ -57,9 +57,9 @@ function AbrirPelaNotificacao() {
 
 export default function App() {
   const [fontesCarregadas] = useFonts({
-    JetBrainsMono_400Regular,
-    JetBrainsMono_500Medium,
-    JetBrainsMono_800ExtraBold,
+    IBMPlexMono_400Regular,
+    IBMPlexMono_500Medium,
+    IBMPlexMono_700Bold,
   });
 
   if (!fontesCarregadas) {
@@ -87,10 +87,10 @@ export default function App() {
                       notification: cores.perigo,
                     },
                     fonts: {
-                      regular: { fontFamily: 'JetBrainsMono_400Regular', fontWeight: '400' },
-                      medium: { fontFamily: 'JetBrainsMono_500Medium', fontWeight: '500' },
-                      bold: { fontFamily: 'JetBrainsMono_800ExtraBold', fontWeight: '800' },
-                      heavy: { fontFamily: 'JetBrainsMono_800ExtraBold', fontWeight: '800' },
+                      regular: { fontFamily: 'IBMPlexMono_400Regular', fontWeight: '400' },
+                      medium: { fontFamily: 'IBMPlexMono_500Medium', fontWeight: '500' },
+                      bold: { fontFamily: 'IBMPlexMono_700Bold', fontWeight: '700' },
+                      heavy: { fontFamily: 'IBMPlexMono_700Bold', fontWeight: '700' },
                     },
                   }}
                 >

@@ -139,9 +139,9 @@ export const cores = {
 } as const;
 
 export const fontes = {
-  regular: 'JetBrainsMono_400Regular',
-  medio: 'JetBrainsMono_500Medium',
-  extranegrito: 'JetBrainsMono_800ExtraBold',
+  regular: 'IBMPlexMono_400Regular',
+  medio: 'IBMPlexMono_500Medium',
+  extranegrito: 'IBMPlexMono_700Bold',
 } as const;
 
 export const tamanhos = {

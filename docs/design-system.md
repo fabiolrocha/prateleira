@@ -109,7 +109,7 @@ Toast e a cor de fundo da tag laranja preenchida ainda não aparecem em nenhuma 
 
 ### Tipografia
 
-Família: **JetBrains Mono** (400 regular, 500 médio, 800 extranegrito).
+Família: **IBM Plex Mono** (400 regular, 500 médio, 700 extranegrito).
 
 | Papel | Tamanho | Peso | Observação |
 |---|---|---|---|
@@ -155,9 +155,9 @@ export const cores = {
 } as const;
 
 export const fontes = {
-  regular: 'JetBrainsMono_400Regular',
-  medio: 'JetBrainsMono_500Medium',
-  extranegrito: 'JetBrainsMono_800ExtraBold',
+  regular: 'IBMPlexMono_400Regular',
+  medio: 'IBMPlexMono_500Medium',
+  extranegrito: 'IBMPlexMono_700Bold',
 } as const;
 
 export const tamanhos = { micro: 9, legenda: 11, corpo: 13, titulo: 20, display: 28 } as const;
@@ -182,7 +182,7 @@ export const toque = { minimo: 44 } as const;
 | `positivoClaro`, `perigoClaro` | removidos (tags e botões viram contorno) |
 | `atencao #F2B705` | `atencao #8F6A1E` (o amarelo não passa em contraste como texto/borda) |
 | `perigo #D63F2A` | `perigo #A63A2B` |
-| `fontes.*` Schibsted e `carimbo` DotGothic16 | `fontes` JetBrains Mono |
+| `fontes.*` Schibsted e `carimbo` DotGothic16 | `fontes` IBM Plex Mono |
 | `raios.*` | `raios.nenhum = 0` (remover o uso de raio nos componentes) |
 | `tamanhos` 12/13/14/16/18/30/46 | 9/11/13/20/28 |
 | `espacos.xl 20`, `xxl 24` | `xl 24`, `xxl 36` (revisar quem usa `xl`) |
