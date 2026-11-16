@@ -12,7 +12,7 @@ import {
 import { AjustesProvider, useAjustes } from './sources/contexts/AjustesContext';
 import { DespensaProvider } from './sources/contexts/DespensaContext';
 import type { IntegracoesDespensa } from './sources/contexts/DespensaContext';
-import { ListaComprasProvider } from './sources/contexts/ListaComprasContext';
+import { ListaComprasProvider, useListaCompras } from './sources/contexts/ListaComprasContext';
 import { UsuarioProvider } from './sources/contexts/UsuarioContext';
 import { navigationRef } from './sources/routes/navigationRef';
 import { RootStack } from './sources/routes/RootStack';
@@ -24,6 +24,10 @@ function DespensaComIntegracoes({ children }: { children: ReactNode }) {
   const { ajustes } = useAjustes();
   const ajustesRef = useRef(ajustes);
   ajustesRef.current = ajustes;
+
+  const { adicionarAutomatico } = useListaCompras();
+  const adicionarAutomaticoRef = useRef(adicionarAutomatico);
+  adicionarAutomaticoRef.current = adicionarAutomatico;
 
   const integracoesRef = useRef<IntegracoesDespensa | null>(null);
   if (!integracoesRef.current) {
@@ -37,7 +41,7 @@ function DespensaComIntegracoes({ children }: { children: ReactNode }) {
       agendarAviso: agendador.agendarAviso,
       cancelarAviso: agendador.cancelarAviso,
       registrarEvento,
-      reporNaLista: () => undefined,
+      reporNaLista: (produto) => adicionarAutomaticoRef.current(produto),
     };
   }
 
@@ -59,8 +63,8 @@ export default function App() {
     <SafeAreaProvider>
       <UsuarioProvider>
         <AjustesProvider>
-          <DespensaComIntegracoes>
-            <ListaComprasProvider>
+          <ListaComprasProvider>
+            <DespensaComIntegracoes>
               <NavigationContainer
                 ref={navigationRef}
                 theme={{
@@ -84,8 +88,8 @@ export default function App() {
                 <RootStack />
                 <StatusBar style="dark" />
               </NavigationContainer>
-            </ListaComprasProvider>
-          </DespensaComIntegracoes>
+            </DespensaComIntegracoes>
+          </ListaComprasProvider>
         </AjustesProvider>
       </UsuarioProvider>
     </SafeAreaProvider>
