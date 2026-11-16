@@ -122,12 +122,6 @@ export function Home({ navigation }: Props) {
           icone="list"
           onPress={() => navigation.navigate('Lista')}
         />
-        <Botao
-          titulo="Ir ao mercado"
-          estilo="contorno"
-          icone="shopping-cart"
-          onPress={() => navigation.navigate('Lista')}
-        />
       </View>
     </ScrollView>
   );
