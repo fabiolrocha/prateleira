@@ -1,20 +1,107 @@
+import { useRef } from 'react';
+import type { ReactNode } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import {
+  IBMPlexMono_400Regular,
+  IBMPlexMono_500Medium,
+  IBMPlexMono_700Bold,
+  useFonts,
+} from '@expo-google-fonts/ibm-plex-mono';
+import { AjustesProvider, useAjustes } from './sources/contexts/AjustesContext';
+import { DespensaProvider } from './sources/contexts/DespensaContext';
+import type { IntegracoesDespensa } from './sources/contexts/DespensaContext';
+import { ListaComprasProvider, useListaCompras } from './sources/contexts/ListaComprasContext';
+import { ToastProvider } from './sources/contexts/ToastContext';
+import { UsuarioProvider } from './sources/contexts/UsuarioContext';
+import { useAbrirPelaNotificacao } from './sources/hooks/useAbrirPelaNotificacao';
+import { navigationRef } from './sources/routes/navigationRef';
+import { RootStack } from './sources/routes/RootStack';
+import { registrarEvento } from './sources/services/historico';
+import { criarAgendador } from './sources/services/notificacoes';
+import { cores } from './sources/tema';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+function DespensaComIntegracoes({ children }: { children: ReactNode }) {
+  const { ajustes } = useAjustes();
+  const ajustesRef = useRef(ajustes);
+  ajustesRef.current = ajustes;
+
+  const { adicionarAutomatico } = useListaCompras();
+  const adicionarAutomaticoRef = useRef(adicionarAutomatico);
+  adicionarAutomaticoRef.current = adicionarAutomatico;
+
+  const integracoesRef = useRef<IntegracoesDespensa | null>(null);
+  if (!integracoesRef.current) {
+    const agendador = criarAgendador(() => ({
+      avisosAtivos: ajustesRef.current.avisosAtivos,
+      diasAviso: ajustesRef.current.diasAvisoPadrao,
+      hora: ajustesRef.current.horaAviso,
+      minuto: ajustesRef.current.minutoAviso,
+    }));
+    integracoesRef.current = {
+      agendarAviso: agendador.agendarAviso,
+      cancelarAviso: agendador.cancelarAviso,
+      registrarEvento,
+      reporNaLista: (produto) => adicionarAutomaticoRef.current(produto),
+    };
+  }
+
+  return <DespensaProvider integracoes={integracoesRef.current}>{children}</DespensaProvider>;
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+function AbrirPelaNotificacao() {
+  useAbrirPelaNotificacao();
+  return null;
+}
+
+export default function App() {
+  const [fontesCarregadas] = useFonts({
+    IBMPlexMono_400Regular,
+    IBMPlexMono_500Medium,
+    IBMPlexMono_700Bold,
+  });
+
+  if (!fontesCarregadas) {
+    return null;
+  }
+
+  return (
+    <SafeAreaProvider>
+      <UsuarioProvider>
+        <AjustesProvider>
+          <ListaComprasProvider>
+            <DespensaComIntegracoes>
+              <AbrirPelaNotificacao />
+              <ToastProvider>
+                <NavigationContainer
+                  ref={navigationRef}
+                  theme={{
+                    dark: false,
+                    colors: {
+                      primary: cores.destaque,
+                      background: cores.fundo,
+                      card: cores.painel,
+                      text: cores.destaque,
+                      border: cores.linha,
+                      notification: cores.perigo,
+                    },
+                    fonts: {
+                      regular: { fontFamily: 'IBMPlexMono_400Regular', fontWeight: '400' },
+                      medium: { fontFamily: 'IBMPlexMono_500Medium', fontWeight: '500' },
+                      bold: { fontFamily: 'IBMPlexMono_700Bold', fontWeight: '700' },
+                      heavy: { fontFamily: 'IBMPlexMono_700Bold', fontWeight: '700' },
+                    },
+                  }}
+                >
+                  <RootStack />
+                  <StatusBar style="dark" />
+                </NavigationContainer>
+              </ToastProvider>
+            </DespensaComIntegracoes>
+          </ListaComprasProvider>
+        </AjustesProvider>
+      </UsuarioProvider>
+    </SafeAreaProvider>
+  );
+}

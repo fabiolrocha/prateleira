@@ -33,10 +33,27 @@ function converterNutriScore(grau?: string): NutriScore | undefined {
   return undefined;
 }
 
+function limparNome(nome?: string): string | undefined {
+  const texto = textoOuUndefined(nome);
+  if (!texto) {
+    return undefined;
+  }
+  const vistos = new Set<string>();
+  const partes = texto.split(' - ').filter((parte) => {
+    const chave = parte.trim().toLowerCase();
+    if (!chave || vistos.has(chave)) {
+      return false;
+    }
+    vistos.add(chave);
+    return true;
+  });
+  return partes.join(' - ');
+}
+
 function converterProduto(codigo: string, produto: ProdutoOpenFoodFacts): ProdutoApi {
   return {
     codigo,
-    nome: textoOuUndefined(produto.product_name) ?? 'Produto sem nome',
+    nome: limparNome(produto.product_name) ?? 'Produto sem nome',
     marca: textoOuUndefined(produto.brands),
     fotoUrl: textoOuUndefined(produto.image_front_small_url),
     nutriScore: converterNutriScore(produto.nutriscore_grade),
