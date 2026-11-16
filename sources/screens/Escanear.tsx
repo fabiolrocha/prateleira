@@ -9,6 +9,7 @@ import { Botao } from '../components/Botao';
 import { Campo } from '../components/Campo';
 import type { RootStackParams } from '../routes/tipos';
 import { bordas, cores, espacamentoLetras, espacos, fontes, raios, tamanhos, toque } from '../tema';
+import { fundoPressionado, opacidadePressionado } from '../utils/estiloPressionado';
 
 type Props = NativeStackScreenProps<RootStackParams, 'Escanear'>;
 
@@ -56,7 +57,7 @@ export function Escanear({ navigation }: Props) {
       onPress={() => navigation.goBack()}
       accessibilityRole="button"
       accessibilityLabel="Fechar"
-      style={styles.botaoIcone}
+      style={({ pressed }) => [styles.botaoIcone, fundoPressionado(pressed)]}
     >
       <Feather name="x" size={20} color={cores.destaque} />
     </Pressable>
@@ -138,7 +139,12 @@ export function Escanear({ navigation }: Props) {
           onPress={() => setLanterna((atual) => !atual)}
           accessibilityRole="button"
           accessibilityLabel={lanterna ? 'Desligar lanterna' : 'Ligar lanterna'}
-          style={[styles.botaoIcone, styles.botaoLanterna, lanterna && styles.lanternaLigada]}
+          style={({ pressed }) => [
+            styles.botaoIcone,
+            styles.botaoLanterna,
+            lanterna ? styles.lanternaLigada : null,
+            lanterna ? opacidadePressionado(pressed) : fundoPressionado(pressed),
+          ]}
         >
           <Feather name="zap" size={20} color={lanterna ? cores.sobreDestaque : cores.destaque} />
         </Pressable>

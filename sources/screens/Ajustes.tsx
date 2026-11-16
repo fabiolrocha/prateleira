@@ -10,6 +10,7 @@ import { useDespensa } from '../contexts/DespensaContext';
 import { useUsuario } from '../contexts/UsuarioContext';
 import { cancelarTodos, pedirPermissao, testarNotificacao } from '../services/notificacoes';
 import { bordas, cores, espacamentoLetras, espacos, fontes, raios, tamanhos, toque } from '../tema';
+import { fundoPressionado } from '../utils/estiloPressionado';
 
 const AVATAR = 56;
 
@@ -144,7 +145,7 @@ export function Ajustes() {
           <Pressable
             onPress={abrirSeletor}
             accessibilityRole="button"
-            style={styles.horario}
+            style={({ pressed }) => [styles.horario, fundoPressionado(pressed)]}
           >
             <Text style={styles.textoHorario}>Horário do aviso</Text>
             <Text style={styles.valorHorario}>{horario}</Text>

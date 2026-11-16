@@ -15,6 +15,7 @@ import { useListaCompras } from '../contexts/ListaComprasContext';
 import type { StatusValidade } from '../models/Produto';
 import type { DespensaStackParams } from '../routes/tipos';
 import { bordas, cores, espacamentoLetras, espacos, fontes, raios, tamanhos, toque } from '../tema';
+import { fundoPressionado } from '../utils/estiloPressionado';
 import { formatarData } from '../utils/datas';
 
 type Props = NativeStackScreenProps<DespensaStackParams, 'DetalheProduto'>;
@@ -64,7 +65,7 @@ export function DetalheProduto({ navigation, route }: Props) {
           onPress={() => navigation.goBack()}
           accessibilityRole="button"
           accessibilityLabel="Voltar"
-          style={styles.voltar}
+          style={({ pressed }) => [styles.voltar, fundoPressionado(pressed)]}
         >
           <Feather name="arrow-left" size={24} color={cores.destaque} />
         </Pressable>

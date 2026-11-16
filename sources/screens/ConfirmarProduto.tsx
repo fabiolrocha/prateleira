@@ -22,6 +22,7 @@ import { useDespensa } from '../contexts/DespensaContext';
 import type { RootStackParams } from '../routes/tipos';
 import { buscarProdutoPorCodigo } from '../services/openFoodFacts';
 import { bordas, cores, espacamentoLetras, espacos, fontes, raios, tamanhos, toque } from '../tema';
+import { fundoPressionado } from '../utils/estiloPressionado';
 import type { ProdutoApi } from '../tipos';
 import { inicioDoDia } from '../utils/datas';
 
@@ -196,7 +197,7 @@ export function ConfirmarProduto({ navigation, route }: Props) {
             onPress={abrirSeletorAndroid}
             accessibilityRole="button"
             accessibilityLabel="Escolher data de validade"
-            style={({ pressed }) => [styles.dataBotao, pressed && styles.dataApertada]}
+            style={({ pressed }) => [styles.dataBotao, fundoPressionado(pressed)]}
           >
             <Text style={styles.dataTexto}>{formatarDataCompleta(validade)}</Text>
           </Pressable>
@@ -304,7 +305,6 @@ const styles = StyleSheet.create({
     borderColor: cores.linha,
     borderRadius: raios.nenhum,
   },
-  dataApertada: { backgroundColor: cores.painelPressionado },
   dataTexto: {
     color: cores.destaque,
     fontFamily: fontes.medio,

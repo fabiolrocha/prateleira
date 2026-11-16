@@ -1,6 +1,7 @@
 import type { ComponentProps } from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { fundoPressionado, opacidadePressionado } from '../utils/estiloPressionado';
 import { bordas, cores, espacamentoLetras, espacos, fontes, raios, tamanhos, toque } from '../tema';
 
 export type EstiloBotao = 'primario' | 'positivo' | 'contorno' | 'perigo';
@@ -31,7 +32,7 @@ export function Botao({ titulo, onPress, estilo = 'primario', icone, desabilitad
       style={({ pressed }) => [
         styles.botao,
         { backgroundColor: visual.fundo, borderColor: visual.borda },
-        pressed && styles.apertado,
+        (estilo === 'primario' || estilo === 'positivo' ? opacidadePressionado : fundoPressionado)(pressed, desabilitado),
         desabilitado && styles.desabilitado,
       ]}
     >
@@ -59,6 +60,5 @@ const styles = StyleSheet.create({
     letterSpacing: espacamentoLetras.largo,
     textTransform: 'uppercase',
   },
-  apertado: { opacity: 0.8 },
   desabilitado: { opacity: 0.4 },
 });
