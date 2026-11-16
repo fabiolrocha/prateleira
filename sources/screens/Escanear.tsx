@@ -35,6 +35,12 @@ export function Escanear({ navigation }: Props) {
     navigation.navigate('ConfirmarProduto', { codigoBarras });
   }
 
+  function abrirSemCodigo() {
+    if (jaLeu.current) return;
+    jaLeu.current = true;
+    navigation.navigate('ConfirmarProduto', {});
+  }
+
   function aoLerCodigo(resultado: BarcodeScanningResult) {
     abrirConfirmacao(resultado.data);
   }
@@ -84,6 +90,7 @@ export function Escanear({ navigation }: Props) {
             icone="edit-3"
             onPress={() => setDigitando(true)}
           />
+          <Botao titulo="Adicionar sem código" estilo="contorno" icone="plus" onPress={abrirSemCodigo} />
           {digitando && (
             <View style={styles.digitar}>
               <Campo
@@ -154,12 +161,15 @@ export function Escanear({ navigation }: Props) {
             <Botao titulo="Voltar à câmera" estilo="contorno" onPress={() => setDigitando(false)} />
           </View>
         ) : (
-          <Botao
-            titulo="Digitar código"
-            estilo="contorno"
-            icone="edit-3"
-            onPress={() => setDigitando(true)}
-          />
+          <>
+            <Botao
+              titulo="Digitar código"
+              estilo="contorno"
+              icone="edit-3"
+              onPress={() => setDigitando(true)}
+            />
+            <Botao titulo="Adicionar sem código" estilo="contorno" icone="plus" onPress={abrirSemCodigo} />
+          </>
         )}
       </View>
     </KeyboardAvoidingView>
