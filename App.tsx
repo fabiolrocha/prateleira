@@ -14,6 +14,7 @@ import { DespensaProvider } from './sources/contexts/DespensaContext';
 import type { IntegracoesDespensa } from './sources/contexts/DespensaContext';
 import { ListaComprasProvider, useListaCompras } from './sources/contexts/ListaComprasContext';
 import { UsuarioProvider } from './sources/contexts/UsuarioContext';
+import { useAbrirPelaNotificacao } from './sources/hooks/useAbrirPelaNotificacao';
 import { navigationRef } from './sources/routes/navigationRef';
 import { RootStack } from './sources/routes/RootStack';
 import { registrarEvento } from './sources/services/historico';
@@ -48,6 +49,11 @@ function DespensaComIntegracoes({ children }: { children: ReactNode }) {
   return <DespensaProvider integracoes={integracoesRef.current}>{children}</DespensaProvider>;
 }
 
+function AbrirPelaNotificacao() {
+  useAbrirPelaNotificacao();
+  return null;
+}
+
 export default function App() {
   const [fontesCarregadas] = useFonts({
     JetBrainsMono_400Regular,
@@ -65,6 +71,7 @@ export default function App() {
         <AjustesProvider>
           <ListaComprasProvider>
             <DespensaComIntegracoes>
+              <AbrirPelaNotificacao />
               <NavigationContainer
                 ref={navigationRef}
                 theme={{
