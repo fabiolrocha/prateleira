@@ -5,6 +5,7 @@ import { Campo } from '../components/Campo';
 import { Checkbox } from '../components/Checkbox';
 import { EstadoVazio } from '../components/EstadoVazio';
 import { useListaCompras } from '../contexts/ListaComprasContext';
+import { useToast } from '../contexts/ToastContext';
 import type { ItemCompra } from '../models/ItemCompra';
 import { bordas, cores, espacamentoLetras, espacos, fontes, tamanhos } from '../tema';
 import { fundoPressionado } from '../utils/estiloPressionado';
@@ -17,6 +18,7 @@ type Grupo = {
 
 export function Lista() {
   const { itens, adicionarManual, alternarCarrinho } = useListaCompras();
+  const { mostrar } = useToast();
   const [nome, setNome] = useState('');
 
   const noCarrinho = itens.filter((item) => item.noCarrinho);
@@ -36,8 +38,10 @@ export function Lista() {
 
   async function adicionar() {
     if (!nome.trim()) return;
+    const nomeFinal = nome.trim();
     await adicionarManual(nome);
     setNome('');
+    mostrar(`${nomeFinal} adicionado à lista`, 'sucesso');
   }
 
   return (

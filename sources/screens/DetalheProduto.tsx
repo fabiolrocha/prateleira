@@ -12,6 +12,7 @@ import { ThumbProduto } from '../components/ThumbProduto';
 import { useAjustes } from '../contexts/AjustesContext';
 import { useDespensa } from '../contexts/DespensaContext';
 import { useListaCompras } from '../contexts/ListaComprasContext';
+import { useToast } from '../contexts/ToastContext';
 import type { StatusValidade } from '../models/Produto';
 import type { DespensaStackParams } from '../routes/tipos';
 import { bordas, cores, espacamentoLetras, espacos, fontes, raios, tamanhos, toque } from '../tema';
@@ -38,6 +39,7 @@ export function DetalheProduto({ navigation, route }: Props) {
   const { buscarPorId, atualizar, consumir, descartar, carregando } = useDespensa();
   const { adicionarAutomatico } = useListaCompras();
   const { ajustes } = useAjustes();
+  const { mostrar } = useToast();
   const produto = buscarPorId(produtoId);
 
   useEffect(() => {
@@ -48,10 +50,30 @@ export function DetalheProduto({ navigation, route }: Props) {
 
   const horario = `${doisDigitos(ajustes.horaAviso)}:${doisDigitos(ajustes.minutoAviso)}`;
 
+  async function aoConsumir() {
+    if (!produto) return;
+    const { nome, reposicao } = produto;
+    await consumir(produtoId);
+    mostrar(reposicao ? `${nome} consumido. Adicionado à lista de compras` : `${nome} consumido`, 'sucesso');
+  }
+
+  async function aoDescartar() {
+    if (!produto) return;
+    const { nome } = produto;
+    await descartar(produtoId);
+    mostrar(`${nome} descartado`, 'info');
+  }
+
+  async function aoPorNaLista() {
+    if (!produto) return;
+    await adicionarAutomatico(produto);
+    mostrar(`${produto.nome} adicionado à lista de compras`, 'sucesso');
+  }
+
   function confirmarDescarte() {
     Alert.alert('Joguei fora', `Remover ${produto?.nome} da despensa?`, [
       { text: 'Cancelar', style: 'cancel' },
-      { text: 'Joguei fora', style: 'destructive', onPress: () => descartar(produtoId) },
+      { text: 'Joguei fora', style: 'destructive', onPress: aoDescartar },
     ]);
   }
 
@@ -109,13 +131,13 @@ export function DetalheProduto({ navigation, route }: Props) {
 
         <View style={styles.secao}>
           <Text style={styles.rotulo}>[ AÇÕES ]</Text>
-          <Botao titulo="Consumi" estilo="positivo" icone="check" onPress={() => consumir(produtoId)} />
+          <Botao titulo="Consumi" estilo="positivo" icone="check" onPress={aoConsumir} />
           <Botao titulo="Joguei fora" estilo="perigo" icone="trash-2" onPress={confirmarDescarte} />
           <Botao
             titulo="Pôr na lista"
             estilo="contorno"
             icone="shopping-cart"
-            onPress={() => adicionarAutomatico(produto)}
+            onPress={aoPorNaLista}
           />
         </View>
       </ScrollView>

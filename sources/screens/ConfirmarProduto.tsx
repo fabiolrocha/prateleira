@@ -19,6 +19,7 @@ import { LinhaAjuste } from '../components/LinhaAjuste';
 import { ThumbProduto } from '../components/ThumbProduto';
 import { useAjustes } from '../contexts/AjustesContext';
 import { useDespensa } from '../contexts/DespensaContext';
+import { useToast } from '../contexts/ToastContext';
 import type { RootStackParams } from '../routes/tipos';
 import { buscarProdutoPorCodigo } from '../services/openFoodFacts';
 import { bordas, cores, espacamentoLetras, espacos, fontes, raios, tamanhos, toque } from '../tema';
@@ -48,6 +49,7 @@ export function ConfirmarProduto({ navigation, route }: Props) {
   const { codigoBarras } = route.params;
   const { adicionar } = useDespensa();
   const { ajustes } = useAjustes();
+  const { mostrar } = useToast();
 
   const semCodigo = !codigoBarras;
   const [carregando, setCarregando] = useState(!semCodigo);
@@ -130,6 +132,7 @@ export function ConfirmarProduto({ navigation, route }: Props) {
         diasAviso,
         reposicao,
       });
+      mostrar(`${nomeFinal} adicionado à despensa`, 'sucesso');
       navigation.popToTop();
     } catch {
       setSalvando(false);
