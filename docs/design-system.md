@@ -5,7 +5,7 @@ Modo **claro**, monoespaçado, reto. Substitui o visual antigo do Figma (Schibst
 - **Fonte de verdade visual:** a tela "01 Boas-vindas" do Figma, como está hoje. Quando algum frame divergir dela, o frame está errado, não a 01.
 - **Figma:** https://www.figma.com/design/jThLJM4t47ggLlN7FodICl/Prateleira-%E2%80%94-Prot%C3%B3tipo--Trabalho-Final-
 - **Código:** tudo sai de `sources/tema.ts`. Nenhuma tela usa hex, tamanho ou espaçamento solto (regra do `AGENTS.md`).
-- **Base do sistema:** vem do `design-system.ts` (tema escuro, React Native) adaptado para o claro. Os valores de cor abaixo são **provisórios** até a paleta final ser confirmada (ver Pendências).
+- **Base do sistema:** vem do `design-system.ts` (tema escuro, React Native) adaptado para o claro. As escalas da paleta vêm do Figma; as cores semânticas seguem o que as telas usam (ver Pendências).
 
 ## 1. Regras
 
@@ -23,20 +23,89 @@ Modo **claro**, monoespaçado, reto. Substitui o visual antigo do Figma (Schibst
 
 ### Cores (claro)
 
-| Token | Valor | Uso |
+Duas camadas em `sources/tema.ts`: `paleta` (primitivas, sem significado) e `cores` (semânticas, o que as telas usam). Componente nunca usa `paleta` direto, só `cores`.
+
+#### Primitivas (escalas do Figma, seção Cores)
+
+Valores lidos por pixel do render do Figma.
+
+| Degrau | `cinza` | `primaria` | `creme` |
+|---|---|---|---|
+| 900 | `#131927` | `#054026` | `#C1CDC1` |
+| 800 | `#212936` | `#08653C` | `#CDD9CD` |
+| 700 | `#394050` | `#0B8A52` | `#D0DFD0` |
+| 600 | `#4D5461` | `#0FB86D` | `#D4E6D4` |
+| 500 | `#6D717F` | `#57CD99` | `#DBECDB` |
+| 400 | `#9EA2AE` | `#75D6AB` | `#E2F2E2` |
+| 300 | `#D2D5DB` | `#9DE2C3` | `#E8F7E8` |
+| 200 | `#E5E7EA` | `#B8EAD4` | `#EBF9EB` |
+| 100 | `#F3F4F6` | `#CFF1E2` | `#F7FFF7` |
+| 50 | `#F9FAFB` | `#EBF9F3` | `#FBFEFB` |
+
+`brancoAlfa`: branco `#FFFFFF` com opacidade 100, 90, 80, 70, 60, 50, 40, 30, 20 e 10 por cento (`#FFFFFFE6`, `#FFFFFFCC`, `#FFFFFFB3`, `#FFFFFF99`, `#FFFFFF80`, `#FFFFFF66`, `#FFFFFF4D`, `#FFFFFF33`, `#FFFFFF1A`).
+
+`paleta.tons`: tons que as telas e os componentes do Figma realmente usam, medidos por pixel. Não coincidem com nenhum degrau das escalas acima (as escalas são frias e esverdeadas, as telas são quentes).
+
+| Token | Valor | Onde aparece |
 |---|---|---|
-| `fundo` | `#FFFFFF` | fundo das telas |
-| `painel` | `#F6F3EA` | cards, campos, alertas, tab bar |
-| `painelPressionado` | `#ECE7D8` | pressionado, trilho do slider, thumb |
-| `linha` | `#D9D2BE` | toda borda e divisória (1px) |
-| `texto` | `#4A4437` | texto padrão e secundário |
-| `destaque` | `#0A0A0A` | títulos, valores, ativo, botão primário, foco |
-| `apagado` | `#8A8372` | placeholder e desabilitado. Contraste baixo: nunca para texto essencial |
-| `rotulo` | `#3E6384` | rótulos `[ ... ]` e aba ativa em texto |
-| `atencao` | `#8F6A1E` | vence em breve, pendente |
-| `positivo` | `#2F6B3A` | ok, no prazo, confirmar |
-| `perigo` | `#A63A2B` | vencido, jogado fora. **Token novo** (o design escuro não tinha) |
-| `sobreDestaque` | `#FFFFFF` | texto sobre preenchimento `destaque`, `positivo` ou `perigo` |
+| `preto` | `#0A0A0A` | botão primário, aba ativa, títulos, filtro ativo, botão +, avatar |
+| `creme` | `#F6F3EA` | cards, campos, tab bar, filtro inativo, thumb do slider |
+| `cremeEscuro` | `#ECE7D8` | pressionado (valor do documento, não medido) |
+| `linha` | `#D9D2BE` | borda de card e painel, divisória, trilho do slider |
+| `marrom` | `#4A4437` | texto padrão e secundário, rótulos de aba inativa |
+| `marromClaro` | `#8A8372` | placeholder e desabilitado (valor do documento, não medido) |
+| `azul` | `#3E6384` | rótulos (valor do documento, não aparece nas telas medidas) |
+| `ambar` | `#8F6A1E` | quadradinho e texto de VENCE AMANHÃ |
+| `verde` | `#2F6B3A` | botão Consumi, switch, checkbox, barra "usados a tempo", borda de FALTAM N DIAS |
+| `vermelho` | `#A63A2B` | Joguei fora, barra "jogados fora", ponto do sino, VENCEU ONTEM |
+| `verdeClaro` | `#B8E5C0` | fundo da tag FALTAM N DIAS |
+| `laranjaClaro` | `#FFDBBC` | fundo da tag laranja preenchida |
+| `vermelhoClaro` | `#EFC9C3` | fundo da tag VENCEU ONTEM |
+
+`sombras` (100 a 800): `shadowColor` `cinza[900]`, deslocamento vertical de 1 a 8, raio de 2 a 20, opacidade de 0,06 a 0,14, `elevation` de 1 a 12. **Estimadas** a partir do aspecto do render (o app é de bordas, sombra só em elementos flutuantes como o botão Adicionar).
+
+#### Semânticas (`cores`)
+
+| Token | Valor | Degrau da escala | Uso |
+|---|---|---|---|
+| `fundo` | `#FFFFFF` | `brancoAlfa[100]` | fundo das telas |
+| `painel` | `#F6F3EA` | `tons.creme` | cards, campos, alertas, tab bar |
+| `painelPressionado` | `#ECE7D8` | `tons.cremeEscuro` | pressionado |
+| `linha` | `#D9D2BE` | `tons.linha` | toda borda e divisória (1px) |
+| `texto` | `#4A4437` | `tons.marrom` | texto padrão e secundário |
+| `destaque` | `#0A0A0A` | `tons.preto` | títulos, valores, ativo, botão primário, foco |
+| `apagado` | `#8A8372` | `tons.marromClaro` | placeholder e desabilitado. Contraste baixo: nunca para texto essencial |
+| `rotulo` | `#3E6384` | `tons.azul` | rótulos `[ ... ]` |
+| `atencao` | `#8F6A1E` | `tons.ambar` | vence em breve, pendente |
+| `positivo` | `#2F6B3A` | `tons.verde` | ok, no prazo, confirmar |
+| `perigo` | `#A63A2B` | `tons.vermelho` | vencido, jogado fora |
+| `sobreDestaque` | `#FFFFFF` | `brancoAlfa[100]` | texto sobre preenchimento `destaque`, `positivo` ou `perigo` |
+
+#### Token por componente
+
+| Componente | Fundo | Borda | Texto e ícone |
+|---|---|---|---|
+| Botão primário | `destaque` | nenhuma | `sobreDestaque` |
+| Botão positivo (Consumi) | `positivo` | nenhuma | `sobreDestaque` |
+| Botão contorno | `fundo` | `destaque` | `destaque` |
+| Botão perigo (Joguei fora) | `fundo` | `perigo` | `perigo` |
+| Tag FALTAM N DIAS | `paleta.tons.verdeClaro` | `positivo` | `destaque` |
+| Tag VENCE AMANHÃ | `painel` | `atencao` | `destaque`, quadradinho `atencao` |
+| Tag VENCEU ONTEM | `paleta.tons.vermelhoClaro` | `perigo` | `destaque`, quadradinho `perigo` |
+| Card de produto | `painel` | `linha` | nome `destaque`, quantidade `texto` |
+| Filtro ativo | `destaque` | nenhuma | `sobreDestaque` |
+| Filtro inativo | `painel` | `linha` | `texto` |
+| Tab bar | `painel` | `linha` (topo) | nenhum |
+| Aba ativa | quadrado `destaque` | nenhuma | ícone e rótulo `sobreDestaque` / `destaque` |
+| Aba inativa | transparente | nenhuma | `texto` |
+| Campo | `painel` ou `fundo` | `linha`; foco `destaque` | `destaque`; placeholder `apagado` |
+| Switch ligado | `positivo` | nenhuma | thumb `painel` |
+| Slider | trilho `linha`, preenchido `destaque` | nenhuma | thumb `painel` com borda `linha` |
+| Checkbox marcado | `positivo` | nenhuma | check `sobreDestaque` |
+| Alerta | `painel` | `linha`, barra lateral `destaque` | `texto` |
+| Toast | `destaque` | nenhuma | `sobreDestaque` |
+
+Toast e a cor de fundo da tag laranja preenchida ainda não aparecem em nenhuma tela medida; seguem o botão primário e a escolha acima até o Figma definir.
 
 ### Tipografia
 
@@ -71,18 +140,18 @@ Os tamanhos acima seguem o `design-system.ts`. Se a tela 01 usar outro valor, va
 
 ```ts
 export const cores = {
-  fundo: '#FFFFFF',
-  painel: '#F6F3EA',
-  painelPressionado: '#ECE7D8',
-  linha: '#D9D2BE',
-  texto: '#4A4437',
-  destaque: '#0A0A0A',
-  apagado: '#8A8372',
-  rotulo: '#3E6384',
-  atencao: '#8F6A1E',
-  positivo: '#2F6B3A',
-  perigo: '#A63A2B',
-  sobreDestaque: '#FFFFFF',
+  fundo: paleta.brancoAlfa[100],
+  painel: paleta.tons.creme,
+  painelPressionado: paleta.tons.cremeEscuro,
+  linha: paleta.tons.linha,
+  texto: paleta.tons.marrom,
+  destaque: paleta.tons.preto,
+  apagado: paleta.tons.marromClaro,
+  rotulo: paleta.tons.azul,
+  atencao: paleta.tons.ambar,
+  positivo: paleta.tons.verde,
+  perigo: paleta.tons.vermelho,
+  sobreDestaque: paleta.brancoAlfa[100],
 } as const;
 
 export const fontes = {
