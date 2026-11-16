@@ -9,6 +9,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -145,6 +146,7 @@ export function ConfirmarProduto({ navigation, route }: Props) {
       <View style={styles.centro}>
         <ActivityIndicator size="large" color={cores.destaque} />
         <Text style={styles.texto}>Consultando o Open Food Facts...</Text>
+        <Botao titulo="Cancelar" onPress={() => navigation.popToTop()} estilo="contorno" />
       </View>
     );
   }
@@ -154,13 +156,25 @@ export function ConfirmarProduto({ navigation, route }: Props) {
       <View style={styles.centro}>
         <Text style={styles.texto}>{erro}</Text>
         <Botao titulo="Tentar novamente" onPress={buscar} estilo="contorno" />
+        <Botao titulo="Cancelar" onPress={() => navigation.popToTop()} estilo="contorno" />
       </View>
     );
   }
 
   return (
     <ScrollView style={styles.tela} contentContainerStyle={styles.conteudo} keyboardShouldPersistTaps="handled">
-      <Text style={styles.titulo}>Confirmar produto</Text>
+      <View style={styles.cabecalho}>
+        <Text style={styles.titulo}>Confirmar produto</Text>
+        <Pressable
+          onPress={() => navigation.popToTop()}
+          disabled={salvando}
+          accessibilityRole="button"
+          accessibilityLabel="Fechar"
+          style={({ pressed }) => [styles.botaoFechar, fundoPressionado(pressed, salvando)]}
+        >
+          <Feather name="x" size={20} color={cores.destaque} />
+        </Pressable>
+      </View>
 
       {!semCodigo && (
         <View style={styles.faixa}>
@@ -258,7 +272,24 @@ const styles = StyleSheet.create({
     padding: espacos.xl,
     gap: espacos.lg,
   },
+  cabecalho: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: espacos.md,
+  },
+  botaoFechar: {
+    width: toque.minimo,
+    height: toque.minimo,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: cores.painel,
+    borderWidth: bordas.largura,
+    borderColor: cores.linha,
+    borderRadius: raios.nenhum,
+  },
   titulo: {
+    flexShrink: 1,
     color: cores.destaque,
     fontFamily: fontes.extranegrito,
     fontSize: tamanhos.display,
