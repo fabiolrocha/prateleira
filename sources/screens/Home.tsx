@@ -4,6 +4,7 @@ import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { useFocusEffect } from '@react-navigation/native';
 import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Alerta } from '../components/Alerta';
 import { Botao } from '../components/Botao';
 import { EstadoVazio } from '../components/EstadoVazio';
@@ -24,6 +25,7 @@ const LADO_LEGENDA = 10;
 const ALTURA_BARRA = 16;
 
 export function Home({ navigation }: Props) {
+  const insets = useSafeAreaInsets();
   const { usuario } = useUsuario();
   const { produtos } = useDespensa();
   const [resumo, setResumo] = useState<ResumoMes>({ usadosATempo: 0, jogadosFora: 0 });
@@ -58,7 +60,10 @@ export function Home({ navigation }: Props) {
   const total = resumo.usadosATempo + resumo.jogadosFora;
 
   return (
-    <ScrollView style={styles.tela} contentContainerStyle={styles.conteudo}>
+    <ScrollView
+      style={styles.tela}
+      contentContainerStyle={[styles.conteudo, { paddingTop: insets.top + espacos.xl }]}
+    >
       <Text style={styles.titulo}>Oi, {usuario?.nome}</Text>
 
       <View style={styles.card}>

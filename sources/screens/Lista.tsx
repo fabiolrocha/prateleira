@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Botao } from '../components/Botao';
 import { Campo } from '../components/Campo';
 import { Checkbox } from '../components/Checkbox';
@@ -17,6 +18,7 @@ type Grupo = {
 };
 
 export function Lista() {
+  const insets = useSafeAreaInsets();
   const { itens, adicionarManual, alternarCarrinho } = useListaCompras();
   const { mostrar } = useToast();
   const [nome, setNome] = useState('');
@@ -47,7 +49,7 @@ export function Lista() {
   return (
     <ScrollView
       style={styles.tela}
-      contentContainerStyle={styles.conteudo}
+      contentContainerStyle={[styles.conteudo, { paddingTop: insets.top + espacos.xl }]}
       keyboardShouldPersistTaps="handled"
     >
       <View style={styles.cabecalho}>

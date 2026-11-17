@@ -113,6 +113,10 @@ export function ConfirmarProduto({ navigation, route }: Props) {
     });
   }
 
+  function fechar() {
+    if (navigation.isFocused()) navigation.popToTop();
+  }
+
   async function salvar() {
     const nomeFinal = nome.trim();
     if (!nomeFinal) {
@@ -134,7 +138,7 @@ export function ConfirmarProduto({ navigation, route }: Props) {
         reposicao,
       });
       mostrar(`${nomeFinal} adicionado à despensa`, 'sucesso');
-      navigation.popToTop();
+      fechar();
     } catch {
       setSalvando(false);
       Alert.alert('Erro ao salvar', 'Não foi possível salvar o produto. Tente novamente.');
@@ -146,7 +150,7 @@ export function ConfirmarProduto({ navigation, route }: Props) {
       <View style={styles.centro}>
         <ActivityIndicator size="large" color={cores.destaque} />
         <Text style={styles.texto}>Consultando o Open Food Facts...</Text>
-        <Botao titulo="Cancelar" onPress={() => navigation.popToTop()} estilo="contorno" />
+        <Botao titulo="Cancelar" onPress={fechar} estilo="contorno" />
       </View>
     );
   }
@@ -156,7 +160,7 @@ export function ConfirmarProduto({ navigation, route }: Props) {
       <View style={styles.centro}>
         <Text style={styles.texto}>{erro}</Text>
         <Botao titulo="Tentar novamente" onPress={buscar} estilo="contorno" />
-        <Botao titulo="Cancelar" onPress={() => navigation.popToTop()} estilo="contorno" />
+        <Botao titulo="Cancelar" onPress={fechar} estilo="contorno" />
       </View>
     );
   }
@@ -166,7 +170,7 @@ export function ConfirmarProduto({ navigation, route }: Props) {
       <View style={styles.cabecalho}>
         <Text style={styles.titulo}>Confirmar produto</Text>
         <Pressable
-          onPress={() => navigation.popToTop()}
+          onPress={fechar}
           disabled={salvando}
           accessibilityRole="button"
           accessibilityLabel="Fechar"

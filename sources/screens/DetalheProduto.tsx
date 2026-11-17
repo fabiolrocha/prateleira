@@ -53,11 +53,15 @@ export function DetalheProduto({ navigation, route }: Props) {
 
   async function aoConsumir() {
     if (!produto) return;
-    const { nome, reposicao } = produto;
+    const { nome, reposicao, quantidade } = produto;
+    const acabou = quantidade <= 1;
     setOcupado(true);
     await consumir(produtoId);
     setOcupado(false);
-    mostrar(reposicao ? `${nome} consumido. Adicionado à lista de compras` : `${nome} consumido`, 'sucesso');
+    mostrar(
+      acabou && reposicao ? `${nome} consumido. Adicionado à lista de compras` : `${nome} consumido`,
+      'sucesso',
+    );
   }
 
   async function aoDescartar() {

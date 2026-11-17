@@ -19,8 +19,10 @@ import { useAbrirPelaNotificacao } from './sources/hooks/useAbrirPelaNotificacao
 import { navigationRef } from './sources/routes/navigationRef';
 import { RootStack } from './sources/routes/RootStack';
 import { registrarEvento } from './sources/services/historico';
-import { criarAgendador } from './sources/services/notificacoes';
+import { configurarNotificacoes, criarAgendador } from './sources/services/notificacoes';
 import { cores } from './sources/tema';
+
+configurarNotificacoes();
 
 function DespensaComIntegracoes({ children }: { children: ReactNode }) {
   const { ajustes } = useAjustes();
