@@ -3,6 +3,7 @@ import { AppState, FlatList, StyleSheet, Text, View } from 'react-native';
 import type { CompositeScreenProps } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Alerta } from '../components/Alerta';
 import { Botao } from '../components/Botao';
 import { Campo } from '../components/Campo';
@@ -38,6 +39,7 @@ function normalizar(texto: string): string {
 }
 
 export function Despensa({ navigation }: Props) {
+  const insets = useSafeAreaInsets();
   const { produtos } = useDespensa();
   const { usuario } = useUsuario();
   const [busca, setBusca] = useState('');
@@ -133,7 +135,7 @@ export function Despensa({ navigation }: Props) {
           />
         )}
         ItemSeparatorComponent={() => <View style={styles.separador} />}
-        contentContainerStyle={styles.lista}
+        contentContainerStyle={[styles.lista, { paddingTop: insets.top + espacos.xl }]}
         keyboardShouldPersistTaps="handled"
       />
       <View style={styles.flutuante}>
